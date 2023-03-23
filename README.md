@@ -1,8 +1,22 @@
 # Ansible role template repository
 
+This is an [Ansible](https://www.ansible.com/) role template repository,
+it contains:
+
+- a complete Ansible role structure
+- multiple GitHub actions that assists in [linting](https://ansible-lint.readthedocs.io/)
+the role and managing any dependencies
+- a basic [Ansible Molecule](https://molecule.readthedocs.io/en/latest/)
+test environment using the [Vagrant](https://www.vagrantup.com/) driver
+
+> **Note**
+> You will need too at least update the `meta/main.yml`, `.github/CODEOWNERS`
+> and `.github/workflows/issues.yml` before publishing anything.
+
 ```sh
 .
 ├── .github
+│   ├── CODEOWNERS
 │   └── workflows
 │       ├── issues.yml
 │       ├── lint.yml
@@ -40,5 +54,5 @@
 │   └── test.yml
 └── tox.ini
 
-13 directories, 25 files
+13 directories, 26 files
 ```

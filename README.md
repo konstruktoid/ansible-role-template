@@ -1,0 +1,1 @@
+# Ansible role template repository

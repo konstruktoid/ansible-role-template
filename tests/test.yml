@@ -1,0 +1,8 @@
+---
+- name: Include the template.template role
+  hosts: all
+  any_errors_fatal: true
+  tasks:
+    - name: Include role
+      ansible.builtin.include_role:
+        name: template.template

@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  role_name: template
+  author: template
+  description: template
+  license: apache
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+  galaxy_tags:
+    - ubuntu

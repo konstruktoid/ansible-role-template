@@ -40,7 +40,6 @@ test environment using the [Vagrant](https://www.vagrantup.com/) driver
 │   └── main.yml
 ├── molecule
 │   └── default
-│       ├── INSTALL.rst
 │       ├── converge.yml
 │       ├── molecule.yml
 │       └── verify.yml
@@ -54,5 +53,5 @@ test environment using the [Vagrant](https://www.vagrantup.com/) driver
 │   └── test.yml
 └── tox.ini
 
-13 directories, 26 files
+13 directories, 25 files
 ```

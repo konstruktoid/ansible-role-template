@@ -1,4 +1,4 @@
 ---
 - name: Debug handler
   ansible.builtin.debug:
-    msg: "Template handler."
+    msg: Template handler.

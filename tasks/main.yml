@@ -2,7 +2,7 @@
 - name: Template task
   ansible.builtin.debug:
     msg: "{{ item }}"
-  with_items:
+  loop:
     - "{{ template_text }}"
     - "{{ ansible_os_family }}"
     - "{{ ansible_system_vendor }}"

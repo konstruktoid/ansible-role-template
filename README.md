@@ -20,6 +20,7 @@ test environment using the [Vagrant](https://www.vagrantup.com/) driver
 │   └── workflows
 │       ├── issues.yml
 │       ├── lint.yml
+│       ├── molecule.yml
 │       ├── schedlint.yml
 │       ├── schedmainlint.yml
 │       ├── scorecards.yml

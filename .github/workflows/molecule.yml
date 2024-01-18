@@ -10,9 +10,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set env variables
+        run: |
+          echo PATH="/Library/Frameworks/Python.framework/Versions/3.10/bin:$PATH" >> $GITHUB_ENV
+          echo PATH="/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH" >> $GITHUB_ENV
+          echo PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:$PATH" >> $GITHUB_ENV
+
       - name: Install system dependencies
         run: |
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           python3 -m pip install --upgrade pip
           python3 -m pip install --user --upgrade ansible molecule-plugins[vagrant] tox
           vagrant plugin install vagrant-vbguest

@@ -23,7 +23,7 @@ jobs:
       - name: Install system dependencies
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install --user --upgrade ansible molecule-plugins[vagrant] tox
+          python3 -m pip install --user --upgrade ansible ansible-lint molecule-plugins[vagrant]
           vagrant plugin install vagrant-vbguest
 
       - name: Run tox

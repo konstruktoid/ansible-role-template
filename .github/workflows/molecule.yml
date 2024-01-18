@@ -33,7 +33,7 @@ jobs:
 
       - name: Validate that vagrant and molecule works
         run: |
-          vagrant --version \\
+          vagrant --version \
           && molecule --version
 
       - name: Run molecule

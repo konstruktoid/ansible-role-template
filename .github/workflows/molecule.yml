@@ -1,46 +1,93 @@
 ---
 name: Molecule testing workflow
+
 on:
   workflow_dispatch:
-permissions:
-  contents: read
-jobs:
-  Generate:
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: write
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
-        with:
-          egress-policy: audit
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: 1 # tox, pytest, ansible-lint
+  PY_COLORS: 1
+
+jobs:
+  pre:
+    name: pre
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.generate_matrix.outputs.matrix }}
+    steps:
+      - name: Determine matrix
+        id: generate_matrix
+        uses: coactions/dynamic-matrix@v1
+        with:
+          min_python: "3.10"
+          max_python: "3.12"
+          default_python: "3.10" # used by jobs in other_names
+
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os || 'ubuntu-22.04' }}
+    needs: pre
+    defaults:
+      run:
+        shell: ${{ matrix.shell || 'bash'}}
+    # limit potential endless looks like we had with build-containers
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.pre.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed by setuptools-scm
+          submodules: true
+
+      - name: Set pre-commit cache
+        uses: actions/cache@v3
+        if: ${{ matrix.passed_name == 'lint' }}
+        with:
+          path: |
+            ~/.cache/pre-commit
+          key: pre-commit-${{ matrix.name || matrix.passed_name }}-${{ hashFiles('.pre-commit-config.yaml') }}
       - name: Install system dependencies
+        # remove broken .deb ansible and replace with pip version:
+        # https://github.com/actions/virtual-environments/issues/3001
         run: |
           sudo apt-get remove -y ansible \
           && sudo apt-get update \
-          && sudo apt-get install -y vagrant virtualbox python3-pip libvirt-dev python3-cryptography python3-jinja2 python3-yaml virtualenv --no-install-recommends \
-          && python3 -m pip install -U --user ansible-core molecule-plugins[vagrant] ansible-lint \
+          && sudo apt-get install -y libvirt-dev python3-cryptography python3-jinja2 python3-yaml virtualenv \
+          && pip3 install --user ansible-core ansible-lint\
           && echo "$HOME/.local/bin" >> $GITHUB_PATH
-
+        # https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#adding-a-system-path
       - name: Validate that ansible works
         run: |
           ansible --version \
           && virtualenv foo \
           && source foo/bin/activate \
           && ansible --version
-
-      - name: Validate that vagrant and molecule works
-        run: |
-          vagrant --version \
-          && molecule --version
-
-      - name: Run molecule
-        run: |
-          molecule test
-
-      - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Set up Python ${{ matrix.python_version || '3.10' }}
+        if: "!contains(matrix.shell, 'wsl')"
+        uses: actions/setup-python@v5
         with:
-          ref: ${{ github.head_ref }}
+          cache: pip
+          python-version: ${{ matrix.python_version || '3.10' }}
+
+      - name: Install tox
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade "tox>=4.0.0"
+
+      - name: Log installed dists
+        run: python3 -m pip freeze --all
+
+      - name: Initialize tox envs ${{ matrix.passed_name }}
+        run: python3 -m tox --notest --skip-missing-interpreters true -vv -e ${{ matrix.passed_name }}
+        timeout-minutes: 5 # average is under 1, but macos can be over 3
+
+      # sequential run improves browsing experience (almost no speed impact)
+      - name: tox -e ${{ matrix.passed_name }}
+        run: python3 -m tox -e ${{ matrix.passed_name }}

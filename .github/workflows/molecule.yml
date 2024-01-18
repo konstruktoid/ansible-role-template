@@ -31,6 +31,14 @@ jobs:
           && source foo/bin/activate \
           && ansible --version
 
+      - name: Validate that vagrant works
+        run: |
+          vagrant --version
+
+      - name: Run molecule
+        run: |
+           molecule test
+
       - name: Checkout repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:

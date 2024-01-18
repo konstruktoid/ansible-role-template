@@ -26,4 +26,4 @@ jobs:
 
       - name: Run tox
         run: |
-          tox
+          tox -f "py$( python3 -V | awk '{ print $NF}' | cut -c 1-4 | tr -d '.')-ansible9"

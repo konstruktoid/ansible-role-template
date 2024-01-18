@@ -28,4 +28,5 @@ jobs:
 
       - name: Run tox
         run: |
-          tox -vv
+          ansible-lint
+          molecule test

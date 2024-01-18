@@ -18,6 +18,8 @@ jobs:
 
       - name: Install system dependencies
         run: |
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew install vagrant virtualbox
           python3 -m pip install --upgrade pip
           python3 -m pip install --user --upgrade tox
           vagrant plugin install vagrant-vbguest

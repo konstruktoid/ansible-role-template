@@ -1,24 +1,23 @@
 ---
 name: Molecule testing workflow
-
 on:
   workflow_dispatch:
 
 jobs:
-  vagrant-up:
+  Tox:
     runs-on: macos-12
 
-  steps:
-    - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-    - name: Install system dependencies
-      run: |
-        bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install coreutils python3
-        python3 -m pip install --upgrade pip
-        python3 -m pip install --user --upgrade ansible molecule-plugins[vagrant] tox
-        vagrant plugin install vagrant-vbguest
+      - name: Install system dependencies
+        run: |
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew install coreutils python3
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --user --upgrade ansible molecule-plugins[vagrant] tox
+          vagrant plugin install vagrant-vbguest
 
-    - name: Run tox
-      run: |
-        tox -vv
+      - name: Run tox
+        run: |
+          tox -vv

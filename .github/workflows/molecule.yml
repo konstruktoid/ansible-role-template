@@ -12,8 +12,8 @@ jobs:
 
       - name: Install system dependencies
         run: |
-          apt-get --assume-yes install podman python3-pip slirp4netns uidmap --no-install-recommends
-          python3 -m pip install -U ansible ansible-lint molecule-plugins[podman]
+          sudo apt-get --assume-yes install podman python3-pip slirp4netns uidmap --no-install-recommends
+          python3 -m pip install --user -U ansible ansible-lint molecule-plugins[podman]
 
       - name: Run tox
         run: |

@@ -4,26 +4,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  Tox:
-    runs-on: macos-12
+  Molecule:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set env variables
-        run: |
-          python3 -V | awk '{ print $NF}' | cut -c 1-4
-          echo "/Users/runner/Library/Python/$(python3 -V | awk '{ print $NF}' | cut -c 1-4)/bin" >> $GITHUB_PATH
-          echo "/Library/Frameworks/Python.framework/Versions/$(python3 -V | awk '{ print $NF}' | cut -c 1-4)/bin" >> $GITHUB_PATH
-
       - name: Install system dependencies
         run: |
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          brew install vagrant virtualbox
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --user --upgrade tox
-          vagrant plugin install vagrant-vbguest
+          apt-get --assume-yes install podman python3-pip slirp4netns uidmap --no-install-recommends
+          python3 -m pip install -U ansible ansible-lint molecule-plugins[podman]
 
       - name: Run tox
         run: |
-          tox -f "py$( python3 -V | awk '{ print $NF}' | cut -c 1-4 | tr -d '.')-ansible9"
+          ansible-lint
+          molecule test -s podman

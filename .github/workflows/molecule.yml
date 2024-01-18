@@ -1,0 +1,37 @@
+---
+name: Molecule testing workflow
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  Generate:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get remove -y ansible \
+          && sudo apt-get update \
+          && sudo apt-get install -y vagrant python3-pip libvirt-dev python3-cryptography python3-jinja2 python3-yaml virtualenv \
+          && python3 -m pip install -U --user ansible-core molecule-plugins[vagrant] ansible-lint \
+          && echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Validate that ansible works
+        run: |
+          ansible --version \
+          && virtualenv foo \
+          && source foo/bin/activate \
+          && ansible --version
+
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          ref: ${{ github.head_ref }}

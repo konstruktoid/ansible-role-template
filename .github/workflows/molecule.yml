@@ -20,7 +20,7 @@ jobs:
         run: |
           sudo apt-get remove -y ansible \
           && sudo apt-get update \
-          && sudo apt-get install -y vagrant python3-pip libvirt-dev python3-cryptography python3-jinja2 python3-yaml virtualenv \
+          && sudo apt-get install -y vagrant virtualbox python3-pip libvirt-dev python3-cryptography python3-jinja2 python3-yaml virtualenv --no-install-recommends \
           && python3 -m pip install -U --user ansible-core molecule-plugins[vagrant] ansible-lint \
           && echo "$HOME/.local/bin" >> $GITHUB_PATH
 
@@ -31,13 +31,14 @@ jobs:
           && source foo/bin/activate \
           && ansible --version
 
-      - name: Validate that vagrant works
+      - name: Validate that vagrant and molecule works
         run: |
-          vagrant --version
+          vagrant --version \\
+          && molecule --version
 
       - name: Run molecule
         run: |
-           molecule test
+          molecule test
 
       - name: Checkout repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1

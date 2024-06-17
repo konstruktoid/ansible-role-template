@@ -1,4 +1,3 @@
-# https://github.com/renovatebot/renovate/discussions/13273#discussioncomment-1892107
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [

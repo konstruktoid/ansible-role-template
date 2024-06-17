@@ -3,4 +3,4 @@ profile: production
 exclude_paths:
   - .git/
   - .github/
-  - tests
+  - .pre-commit-config.yaml

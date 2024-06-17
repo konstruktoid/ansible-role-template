@@ -3,10 +3,18 @@ name: Molecule testing workflow
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   Molecule:
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
         uses: actions/checkout@v4
 

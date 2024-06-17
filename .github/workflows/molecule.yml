@@ -16,7 +16,7 @@ jobs:
           egress-policy: audit
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.7
 
       - name: Install system dependencies
         run: |

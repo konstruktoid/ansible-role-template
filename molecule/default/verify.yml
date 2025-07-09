@@ -25,10 +25,6 @@
         extensions:
           - yml
 
-    - name: Include host vars
-      ansible.builtin.include_vars:
-        file: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/inventory/host_vars/{{ ansible_hostname }}"
-
     - name: Print the template_text
       ansible.builtin.debug:
         msg: "{{ template_text }}"

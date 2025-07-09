@@ -3,7 +3,7 @@ dependency:
   name: galaxy
   enabled: true
 driver:
-  name: podman
+  name: docker
 provisioner:
   name: ansible
   config_options:
@@ -18,15 +18,15 @@ provisioner:
       jammy:
         template_text: This is the molecule template test.
 platforms:
-  - name: jammy
-    image: docker.io/ubuntu:jammy
+  - name: noble
+    image: docker.io/ubuntu:noble
     privileged: true
     volume_mounts:
       - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
 verifier:
   name: ansible
 scenario:
-  name: podman
+  name: docker
   create_sequence:
     - dependency
     - create

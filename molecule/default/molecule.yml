@@ -20,8 +20,8 @@ provisioner:
       jammy:
         template_text: This is the molecule template test.
 platforms:
-  - name: jammy
-    box: ubuntu/jammy64
+  - name: noble
+    box: bento/ubuntu-24.04
     config_options:
       vm.boot_timeout: 600
       synced_folder: false

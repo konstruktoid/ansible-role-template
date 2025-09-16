@@ -2,5 +2,5 @@ ansible
 ansible-lint
 molecule-plugins[docker]
 molecule-plugins[vagrant]
-molecule==25.7.0
+molecule==25.9.0
 passlib
